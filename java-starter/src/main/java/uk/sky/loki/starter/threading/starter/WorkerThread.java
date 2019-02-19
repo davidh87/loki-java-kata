@@ -12,14 +12,27 @@ public class WorkerThread extends Thread {
 
     @Override
     public void run() {
-        while(true) {
-            WorkItem workItem = workItemsQueue.poll();
+        while (true) {
 
-            if (PrimeNumberCalculator.isPrime(workItem.getPossiblePrime())) {
-                System.out.println(workItem.getPossiblePrime() + " is prime");
+            WorkItem workItem;
+
+            synchronized(workItemsQueue) {
+                workItem = workItemsQueue.poll();
             }
-            else {
-                System.out.println(workItem.getPossiblePrime() + " is NOT prime");
+
+            if (workItem != null) {
+
+                if (PrimeNumberCalculator.isPrime(workItem.getPossiblePrime())) {
+                    System.out.println(workItem.getPossiblePrime() + " is prime");
+                } else {
+//                    System.out.println(workItem.getPossiblePrime() + " is NOT prime");
+                }
+            } else {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

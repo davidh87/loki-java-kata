@@ -14,9 +14,12 @@ public class WorkProducer {
         }
 
         int lastPrime = 1;
-        while(true) {
-            workItems.add(new WorkItem(lastPrime++));
-            Thread.sleep(1000);
+        while (true) {
+//            System.out.println("Adding " + lastPrime);
+            synchronized (workItems) {
+                workItems.add(new WorkItem(lastPrime++));
+            }
+            Thread.sleep(100);
         }
     }
 
